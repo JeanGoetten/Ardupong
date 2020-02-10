@@ -1,6 +1,23 @@
 //The Matrix
-int pos[8][8]; 
+int ball[8][8] = {{1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}, 
+                 {1, 1, 1, 1, 1, 1, 1, 1}};
+
+int ball_shadow[8][8] = {{1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}, 
+                         {1, 1, 1, 1, 1, 1, 1, 1}};
 int i, j; 
+int i_shadow, j_shadow; 
 
 //The Player 1
 int player1[7] = {1, 2, 3, 4, 5, 6, 7}; 
@@ -14,8 +31,6 @@ int player2_position;
 #define btn_p2_r 9
 #define btn_p2_l 8
 
-bool controll_up;
-
 //Stand-by
 #define led_standby 13
 
@@ -27,12 +42,11 @@ bool controll_up;
 
 //Variables 
 int rng;
-int ball_move_i;
-int ball_move_j;
+int i_controll;
+int j_controll;
 int started;
 int game_level; //milliseconds (decrease for faster)
 bool ball_roll; 
-bool game_over; 
 int game_mode;
 
 //Task Controll
@@ -75,11 +89,11 @@ void Start(){
   }
 }
 void Game_Over(){
-  controll_up = false; 
-  ball_move_i = 0; 
-  ball_move_j = 0; 
-  Led_GameOver(); 
-  started = 0; 
+  while(!started){
+    i_controll = 0; 
+    j_controll = 0; 
+    Led_GameOver(); 
+  }
 }
 //GAME MODE
 void Idle(){
@@ -90,106 +104,11 @@ void Idle(){
 void Simulated_Playing(){
   //WIP
 }
-//PVP Game
-void PVP_Game(){
-  if(started == 1 && game_over == false){
-
-    ball_roll = true; 
-    controll_up = true; 
-    
-    Countdown(); 
-  }
-}
 //PVE Game
 void PVE_Game(){
   //WIP
 }
-//ENGINE
-void Ball_Roll(){
-   Serial.println("Ball Roll iniciado!!");
 
-   Serial.println("Posição incial verificada!!");
-
-   Serial.println("Start Ball Move");
-   Serial.println(ball_move_i); 
-
-   while(!game_over){
-     for(i; i >= 1 && i <= 8; i = i + ball_move_i){
-      j = j + ball_move_j;
-      
-      Serial.println(i); 
-      Serial.println(j); 
-      
-      delay(game_level); 
-      
-     }
-     //Line Correction
-     if(i <= 1){
-      if(j == player1_position){
-        i = 2; 
-        ball_move_i = ball_move_i * (-1);
-        ball_move_j = -1; 
-      }
-      else{
-        game_over = true; 
-      }
-      if(j == (player1_position + 1)){
-        i = 2; 
-        ball_move_i = ball_move_i * (-1);
-        ball_move_j = 1; 
-      }
-      else{
-        game_over = true; 
-      }
-     }
-     if(i >= 8){
-      if(j == player2_position){
-        i = 7; 
-        ball_move_i = ball_move_i * (-1); 
-        ball_move_j = 1; 
-      }
-      else{
-        game_over = true; 
-      }
-      if(j == (player2_position + 1)){
-        i = 7; 
-        ball_move_i = ball_move_i * (-1); 
-        ball_move_j = -1; 
-      }
-      else{
-        game_over = true; 
-      }
-     }
-   }
-}
-void Player_Controll(){
-  while(controll_up){
-    //PLAYER CONTROLLS
-    if(digitalRead(btn_p1_r == HIGH)){
-      player1_position++; 
-      delay(50); 
-    }
-    if(digitalRead(btn_p1_l == HIGH)){
-      player1_position--; 
-      delay(50); 
-    }
-    player1[player1_position]; 
-    
-    if(digitalRead(btn_p2_r == HIGH)){
-      player1_position++; 
-      delay(50); 
-    }
-    if(digitalRead(btn_p2_l == HIGH)){
-      player1_position--; 
-      delay(50); 
-    }
-    player2[player2_position]; 
-    Serial.println("Controll Actived!!!");
-  }
-  if(game_over == true){
-      Game_Over(); 
-    }
-}
 //SERVICES
 void setup() {
   Serial.begin(9600); 
@@ -198,26 +117,24 @@ void setup() {
   pinMode(led_standby, OUTPUT); 
   pinMode(btn_start, INPUT); 
 
-  started = 1; 
+  int z = 0;
+  int w = 0; 
 
-  i = 4;
-  j = 4;
 
-  ball_move_i = 1;
-  ball_move_j = 0;
+  i = 3;
+  j = 3;
 
-  game_over = false; 
-  controll_up = false; 
-  ball_roll = true; 
+  i_controll = 1;
+  j_controll = 0;
 
   game_level = 1000; 
 
   Serial.println("Setup concluído!!");
   
   //Player Position
-  player1_position = 4; 
+  player1_position = 3; 
   player1[player1_position]; 
-  player2_position = 4; 
+  player2_position = 3; 
   player2[player2_position]; 
 
   pinMode(btn_p1_r, INPUT); 
@@ -225,24 +142,10 @@ void setup() {
   pinMode(btn_p2_r, INPUT); 
   pinMode(btn_p1_l, INPUT); 
 
-  //Game Mode 1 - PVP - 2 PVE
-  game_mode = 1; 
 }
-
 void loop() {
-
-  //Start(); 
-
-    if(blink1Metro.check()){
-      blink1State = !blink1State;
-      if(blink1State){
         
         //PLAYER CONTROLLS
-
-        if(game_over == true){
-          Game_Over(); 
-        }
-        
         if(digitalRead(btn_p1_r == HIGH)){
           player1_position++; 
           delay(50); 
@@ -254,71 +157,65 @@ void loop() {
         player1[player1_position]; 
         
         if(digitalRead(btn_p2_r == HIGH)){
-          player1_position++; 
+          player2_position++; 
           delay(50); 
         }
         if(digitalRead(btn_p2_l == HIGH)){
-          player1_position--; 
+          player2_position--; 
           delay(50); 
         }
         player2[player2_position]; 
         
-        Serial.println("Controll Actived!!!");
-        
-      }
-    }
-    if(blink2Metro.check()){
-      blink2State = !blink2State;
-      if(blink2State){
+        //GAME ENGINE   
+           i = i + i_controll;
+           j = j + j_controll;
+            
+           ball[i][j] = 0; 
 
-          i = i + ball_move_i;
-          j = j + ball_move_j;
-          
-          Serial.println(ball_move_i); 
-          Serial.println(ball_move_j); 
+           i_shadow = i - 1; 
+           j_shadow = j - 1;
+            
+           ball_shadow[i_shadow][j_shadow] = 1; 
 
-          int number = -1;
-          Serial.println(number); 
-         
-         //Line Correction
-         if(i <= 1){
-          if(j == player1_position){
-            i = 2; 
-            ball_move_i = 1;
-            ball_move_j = -1;
-          }
-          else{
-            game_over = true; 
-          }
-          if(j == (player1_position + 1)){
-            i = 2; 
-            ball_move_i = 1;
-            ball_move_j = 1; 
-          }
-          else{
-            game_over = true; 
-          }
-         }
-         if(i >= 8){
-          if(j == player2_position){
-            i = 7; 
-            ball_move_i = -2;
-            ball_move_j = 1; 
-          }
-          else{
-            game_over = true; 
-          }
-          if(j == (player2_position + 1)){
-            i = 7; 
-            ball_move_i = -2;
-            ball_move_j = -1;
-          }
-          else{
-            game_over = true; 
-          }
-         }
-         
-      }
-    }
-
+            //Line Correction
+               if(i == 0){
+                switch(player1_position){
+                  case 3:
+                    i_controll = 1;
+                    j_controll = -1;
+                    break;
+                  case 4:
+                    i_controll = 1;
+                    j_controll = 1;
+                    break;
+                  default:
+                    Game_Over();
+                    Serial.println("Gameover 1"); 
+                    break;
+                }
+               }
+               if(i == 7){
+                switch(player2_position){
+                  case 3:
+                    i_controll = -1;
+                    j_controll = 1;
+                    break;
+                  case 4:
+                    i_controll = -1;
+                    j_controll = -1;
+                    break;
+                  default:
+                    Game_Over();
+                    Serial.println("Gameover 2"); 
+                    break;
+                }
+               }
+               //Colunm correction
+               if(j == 0){
+                j_controll = 1;
+               }
+               if(j == 7){
+                j_controll = -1;
+               }
+      
 }
