@@ -115,9 +115,9 @@ void loop(){
         //Register line
         digitalWrite(lath_i, LOW); 
         for(int data_reg_i = 1; data_reg_i < 9; data_reg_i++){
+          digitalWrite(cloc_i, HIGH);
          digitalWrite(data_i, ball_i[data_reg_i]);
-         Serial.print(ball_i[data_reg_i]); 
-         digitalWrite(cloc_i, HIGH);
+         Serial.print(ball_i[data_reg_i]);
          digitalWrite(cloc_i, LOW);  
         }
         digitalWrite(lath_i, HIGH); 
@@ -126,9 +126,8 @@ void loop(){
         //Register column
         digitalWrite(lath_j, LOW); 
         for(int data_reg_j = 1; data_reg_j < 8; data_reg_j++){
+          digitalWrite(cloc_j, HIGH);
          digitalWrite(data_j, ball_j[data_reg_j]);
-          
-         digitalWrite(cloc_j, HIGH);
          digitalWrite(cloc_j, LOW);  
         }
         digitalWrite(lath_j, HIGH); 
