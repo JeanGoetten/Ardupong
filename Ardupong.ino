@@ -1,6 +1,6 @@
 //The Matrix
-int ball_i [9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-int ball_j [9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+int ball_i [] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+int ball_j [] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 int i, j; 
 
@@ -114,24 +114,25 @@ void loop(){
         
         //Register line
         digitalWrite(lath_i, LOW); 
-        for(int data_reg_i = 0; data_reg_i < 8; data_reg_i++){
+        for(int data_reg_i = 0; data_reg_i < 7; data_reg_i++){
           digitalWrite(cloc_i, HIGH);
          digitalWrite(data_i, ball_i[data_reg_i]);
          Serial.print(ball_i[data_reg_i]);
          digitalWrite(cloc_i, LOW);  
           
-          //Register column
-          digitalWrite(lath_j, LOW); 
-          for(int data_reg_j = 0; data_reg_j < 8; data_reg_j++){
-            digitalWrite(cloc_j, HIGH);
-            digitalWrite(data_j, ball_j[data_reg_j]);
-            digitalWrite(cloc_j, LOW);  
-          }
-          digitalWrite(lath_j, HIGH); 
         }
         digitalWrite(lath_i, HIGH); 
         Serial.println("");
            
+        //Register column
+          digitalWrite(lath_j, LOW); 
+          for(int data_reg_j = 0; data_reg_j < 7; data_reg_j++){
+            digitalWrite(cloc_j, HIGH);
+            digitalWrite(data_j, ball_j[data_reg_j]);
+            digitalWrite(cloc_j, LOW);  
+          }
+          digitalWrite(lath_j, HIGH);
+        
         //Line Correction
         if(i == 1){
           if(player1 == j){
