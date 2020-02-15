@@ -138,12 +138,12 @@ void loop(){
           if(player1 == j){
             i_controll = 1;
             Serial.println("Ponged!!"); 
-            //j_controll = 1;
+            j_controll = 1;
           }
-          //if(player1_position_r == j){
-            //i_controll = -1;
-            //j_controll = -1;
-          //}
+          if(player1 == j + 1){
+            i_controll = -1;
+            j_controll = -1;
+          }
           else{
             Serial.println("Gameover 1"); 
             Game_Over();
@@ -153,12 +153,12 @@ void loop(){
           if(player2 == j){
             i_controll = -1;
             Serial.println("Ponged!!"); 
-            //j_controll = 1;
+            j_controll = 1;
           }
-          //if(player2_position_l == j){
-            //i_controll = -1;
-            //j_controll = -1;
-          //}
+          if(player2 == j + 1){
+            i_controll = -1;
+            j_controll = -1;
+          }
           else{
             Serial.println("Gameover 2"); 
             Game_Over();
